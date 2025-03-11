@@ -1,6 +1,9 @@
 import { DarkMode, LightMode, ShoppingCart } from "@mui/icons-material";
-import { AppBar, IconButton, List, ListItem, Toolbar, Typography ,Badge, Box} from "@mui/material";
+import { AppBar, IconButton, List, ListItem, Toolbar, Typography ,Badge, Box, LinearProgress} from "@mui/material";
 import { NavLink } from "react-router-dom";
+import { useAppSelector } from "../store/store";
+import { useDispatch } from "react-redux";
+import { toggleDarkMode } from "./uiSlice";
 
 const midLinks = [
     {title: 'catalog', path: '/catalog'},
@@ -26,21 +29,19 @@ const navStyles = {
 
 }
 
-type Props = {
-    darkMode: boolean;
-    handleDarkMode: () => void;
-}
-
-export default function NavBar({darkMode, handleDarkMode}: Props) {
 
 
+export default function NavBar() {
+    const {isLoading, darkMode} = useAppSelector(state => state.ui);
+    const dispatch = useDispatch();
+    
 
     return (
         <AppBar position="fixed">
         <Toolbar sx={{display: 'flex', justifyContent: 'space-between'}}>
             <Box display="flex" flexDirection="row" alignItems="center">
                 <Typography variant="h6" component={NavLink} to={'/'} sx={navStyles}>RE-STORE</Typography>
-                <IconButton onClick={handleDarkMode}>{darkMode ? <DarkMode/> : <LightMode sx={{ color: 'yellow'}}/>}</IconButton>
+                <IconButton onClick={() => dispatch(toggleDarkMode())}>{darkMode ? <DarkMode/> : <LightMode sx={{ color: 'yellow'}}/>}</IconButton>
             </Box>
 
             <List sx={{display: 'flex', flexDirection: 'row'}}>
@@ -75,6 +76,11 @@ export default function NavBar({darkMode, handleDarkMode}: Props) {
             </Box>
 
         </Toolbar>
+        {isLoading && (
+            <Box sx={{width: '100%'}}>
+                <LinearProgress color="secondary"/>
+            </Box>
+        )}
         </AppBar>
     );
 }
