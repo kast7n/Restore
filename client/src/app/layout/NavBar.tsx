@@ -4,6 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 import { useAppSelector } from "../store/store";
 import { useDispatch } from "react-redux";
 import { toggleDarkMode } from "./uiSlice";
+import { useFetchBasketQuery } from "../../features/basket/basketApi";
 
 const midLinks = [
     {title: 'catalog', path: '/catalog'},
@@ -34,7 +35,8 @@ const navStyles = {
 export default function NavBar() {
     const {isLoading, darkMode} = useAppSelector(state => state.ui);
     const dispatch = useDispatch();
-    
+    const {data: basket} = useFetchBasketQuery();
+    const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
     return (
         <AppBar position="fixed">
@@ -58,7 +60,7 @@ export default function NavBar() {
             </List>
             <Box display="flex" flexDirection="row" alignItems="center">
             <IconButton size="large" sx={{color: 'inherit'}} component={Link} to="/basket">
-                <Badge badgeContent={4} color="secondary">
+                <Badge badgeContent={itemCount} color="secondary">
                     <ShoppingCart/>
                 </Badge>
             </IconButton>

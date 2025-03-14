@@ -70,7 +70,7 @@ public class BasketController(StoreContext context) : BaseApiController
         if(basket == null) return BadRequest("No basket available, try adding an item to the basket");
         basket.RemoveItem(productId, quantity);
         var result = await context.SaveChangesAsync() > 0;
-        if(result) Ok();
+        if(result) return Ok();
 
         return BadRequest("Problem removing item from basket");
     }
