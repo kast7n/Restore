@@ -1,11 +1,12 @@
 import { Grid2, Typography } from "@mui/material";
 import { useFetchBasketQuery } from "./basketApi"
 import BasketItem from "./BasketItem";
+import OrderSummary from "../../app/shared/OrderSummary";
 
 export default function BasketPage() {
     const {data, isLoading} = useFetchBasketQuery();
     if(isLoading) return <Typography>Loading basket...</Typography>
-    if(!data) return <Typography variant="h3">Basket is empty.</Typography>
+    if(!data || data.items.length === 0) return <Typography variant="h3">Basket is empty.</Typography>
   return (
     <Grid2 container spacing={2}>
         <Grid2 size={8}>
@@ -13,6 +14,9 @@ export default function BasketPage() {
                 <BasketItem item={item} key={item.productId}/>
             ))}
         </Grid2>
+        <Grid2 size={4}>
+          <OrderSummary/>
+          </Grid2>            
     </Grid2>
   )
 }
